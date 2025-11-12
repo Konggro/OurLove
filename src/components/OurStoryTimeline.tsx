@@ -342,7 +342,7 @@ export function OurStoryTimeline({ onBack }: { onBack: () => void }) {
                   <ImageWithFallback
                     src={milestone.image}
                     alt={milestone.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain"
                   />
                 </div>
                 <p className="text-sm text-gray-500 mb-1">{milestone.date}</p>
@@ -381,7 +381,7 @@ export function OurStoryTimeline({ onBack }: { onBack: () => void }) {
                 <ImageWithFallback
                   src={selectedMilestone.image}
                   alt={selectedMilestone.title}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                 />
               </div>
               
