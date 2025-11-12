@@ -338,11 +338,11 @@ export function OurStoryTimeline({ onBack }: { onBack: () => void }) {
                   y: { duration: 3, repeat: Infinity, delay: index * 0.5 },
                 }}
               >
-                <div className="relative w-full aspect-square bg-gray-200 rounded mb-3 overflow-hidden">
+                <div className="relative w-full min-h-[200px] bg-gray-200 rounded mb-3 overflow-hidden flex items-center justify-center">
                   <ImageWithFallback
                     src={milestone.image}
                     alt={milestone.title}
-                    className="w-full h-full object-contain"
+                    className="max-w-full max-h-[200px] w-auto h-auto object-contain"
                   />
                 </div>
                 <p className="text-sm text-gray-500 mb-1">{milestone.date}</p>
@@ -377,11 +377,11 @@ export function OurStoryTimeline({ onBack }: { onBack: () => void }) {
                 <X className="w-5 h-5" />
               </button>
               
-              <div className="relative w-full aspect-video bg-gray-200 rounded-lg mb-4 overflow-hidden">
+              <div className="relative w-full min-h-[300px] bg-gray-200 rounded-lg mb-4 overflow-hidden flex items-center justify-center">
                 <ImageWithFallback
                   src={selectedMilestone.image}
                   alt={selectedMilestone.title}
-                  className="w-full h-full object-contain"
+                  className="max-w-full max-h-[500px] w-auto h-auto object-contain"
                 />
               </div>
               
