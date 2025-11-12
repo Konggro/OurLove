@@ -339,12 +339,12 @@ export function OurStoryTimeline({ onBack }: { onBack: () => void }) {
                 }}
               >
                 {milestone.image && (
-                  <div className="relative w-full bg-gray-200 rounded mb-3 overflow-hidden flex items-center justify-center p-2">
+                  <div className="relative w-full bg-gray-200 rounded mb-3 overflow-hidden flex items-center justify-center p-2" style={{ minHeight: '200px' }}>
                     <ImageWithFallback
                       src={milestone.image}
                       alt={milestone.title}
                       className="max-w-full max-h-[300px] w-auto h-auto object-contain rounded"
-                      style={{ maxWidth: '100%' }}
+                      style={{ maxWidth: '100%', height: 'auto', display: 'block' }}
                     />
                   </div>
                 )}
@@ -381,12 +381,12 @@ export function OurStoryTimeline({ onBack }: { onBack: () => void }) {
               </button>
               
               {selectedMilestone.image && (
-                <div className="relative w-full bg-gray-200 rounded-lg mb-4 overflow-hidden flex items-center justify-center p-4">
+                <div className="relative w-full bg-gray-200 rounded-lg mb-4 overflow-hidden flex items-center justify-center p-4" style={{ minHeight: '300px' }}>
                   <ImageWithFallback
                     src={selectedMilestone.image}
                     alt={selectedMilestone.title}
                     className="max-w-full max-h-[500px] w-auto h-auto object-contain rounded"
-                    style={{ maxWidth: '100%' }}
+                    style={{ maxWidth: '100%', height: 'auto', display: 'block' }}
                   />
                 </div>
               )}

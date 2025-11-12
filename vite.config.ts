@@ -16,7 +16,12 @@
       outDir: 'dist',
       sourcemap: false,
       minify: 'esbuild',
-      chunkSizeWarningLimit: 1000,
+      chunkSizeWarningLimit: 2000,
+      rollupOptions: {
+        output: {
+          manualChunks: undefined,
+        },
+      },
     },
     server: {
       port: 3000,
