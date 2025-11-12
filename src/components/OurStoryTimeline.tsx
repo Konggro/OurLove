@@ -322,7 +322,7 @@ export function OurStoryTimeline({ onBack }: { onBack: () => void }) {
                 className="relative bg-white p-3 shadow-2xl rounded-lg w-64 cursor-pointer"
                 style={{ 
                   transform: `rotate(${(index % 2 === 0 ? 1 : -1) * 2}deg)`,
-                  marginTop: '100px',
+                  marginTop: index % 2 === 0 ? '-200px' : '100px',
                 }}
                 whileHover={{ 
                   scale: 1.05, 
@@ -338,16 +338,13 @@ export function OurStoryTimeline({ onBack }: { onBack: () => void }) {
                   y: { duration: 3, repeat: Infinity, delay: index * 0.5 },
                 }}
               >
-                {milestone.image && (
-                  <div className="relative w-full bg-gray-200 rounded mb-3 overflow-visible flex items-center justify-center p-2">
-                    <ImageWithFallback
-                      src={milestone.image}
-                      alt={milestone.title}
-                      className="w-full h-auto max-h-[250px] object-contain rounded"
-                      style={{ maxWidth: '100%', height: 'auto' }}
-                    />
-                  </div>
-                )}
+                <div className="relative w-full aspect-square bg-gray-200 rounded mb-3 overflow-hidden">
+                  <ImageWithFallback
+                    src={milestone.image}
+                    alt={milestone.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
                 <p className="text-sm text-gray-500 mb-1">{milestone.date}</p>
                 <h3 className="text-lg text-gray-900">{milestone.title}</h3>
               </motion.button>
@@ -380,16 +377,13 @@ export function OurStoryTimeline({ onBack }: { onBack: () => void }) {
                 <X className="w-5 h-5" />
               </button>
               
-              {selectedMilestone.image && (
-                <div className="relative w-full bg-gray-200 rounded-lg mb-4 overflow-visible flex items-center justify-center p-4">
-                  <ImageWithFallback
-                    src={selectedMilestone.image}
-                    alt={selectedMilestone.title}
-                    className="w-full h-auto max-h-[600px] object-contain rounded"
-                    style={{ maxWidth: '100%', height: 'auto' }}
-                  />
-                </div>
-              )}
+              <div className="relative w-full aspect-video bg-gray-200 rounded-lg mb-4 overflow-hidden">
+                <ImageWithFallback
+                  src={selectedMilestone.image}
+                  alt={selectedMilestone.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
               
               <p className="text-sm text-[#C7AFFF] mb-2">{selectedMilestone.date}</p>
               <h3 className="text-3xl font-['Pacifico'] text-gray-900 mb-4">
