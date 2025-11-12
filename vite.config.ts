@@ -15,7 +15,7 @@
       target: 'esnext',
       outDir: 'dist',
       sourcemap: false,
-      minify: 'terser',
+      minify: 'esbuild',
     },
     server: {
       port: 3000,
