@@ -4,8 +4,10 @@ import { Image as ImageIcon, X, Heart, Sparkles, Plus, Edit, Trash2, Upload } fr
 import { BackButton } from './BackButton';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { memoryService, Memory, imageService } from '../lib/database-supabase';
+import { useAuth } from '../contexts/AuthContext';
 
 export function MuseumOfUs({ onBack }: { onBack: () => void }) {
+  const { currentUser } = useAuth();
   const [memories, setMemories] = useState<Memory[]>([]);
   const [selectedMemory, setSelectedMemory] = useState<Memory | null>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -73,6 +75,7 @@ export function MuseumOfUs({ onBack }: { onBack: () => void }) {
       await memoryService.create({
         ...formData,
         image: imageUrl,
+        user_id: currentUser || undefined,
       });
 
       setIsAdding(false);

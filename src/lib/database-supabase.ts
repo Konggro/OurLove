@@ -1,5 +1,80 @@
 import { supabase } from './supabase';
 
+// Notifications (defined early as it's used by other services)
+export interface Notification {
+  id?: string;
+  user_id: string;
+  type: 'memory' | 'milestone' | 'recipe' | 'location' | 'love_letter' | 'playlist' | 'joke' | 'date_idea' | 'care_package' | 'countdown' | 'daily_message' | 'reason' | 'compliment' | 'language_entry';
+  title: string;
+  message: string;
+  read: boolean;
+  created_at?: string;
+}
+
+export const notificationService = {
+  async getAll(userId: string): Promise<Notification[]> {
+    const { data, error } = await supabase
+      .from('notifications')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return (data || []) as Notification[];
+  },
+
+  async getUnread(userId: string): Promise<Notification[]> {
+    const { data, error } = await supabase
+      .from('notifications')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('read', false)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return (data || []) as Notification[];
+  },
+
+  async create(notification: Omit<Notification, 'id' | 'created_at'>): Promise<string> {
+    const { data, error } = await supabase
+      .from('notifications')
+      .insert(notification)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data.id;
+  },
+
+  async markAsRead(id: string): Promise<void> {
+    const { error } = await supabase
+      .from('notifications')
+      .update({ read: true })
+      .eq('id', id);
+
+    if (error) throw error;
+  },
+
+  async markAllAsRead(userId: string): Promise<void> {
+    const { error } = await supabase
+      .from('notifications')
+      .update({ read: true })
+      .eq('user_id', userId)
+      .eq('read', false);
+
+    if (error) throw error;
+  },
+
+  async delete(id: string): Promise<void> {
+    const { error } = await supabase
+      .from('notifications')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+  },
+};
+
 // Countdowns
 export interface Countdown {
   id?: string;
@@ -74,6 +149,7 @@ export interface Memory {
   image: string;
   x: number;
   y: number;
+  user_id?: string;
   created_at?: string;
 }
 
@@ -96,6 +172,23 @@ export const memoryService = {
       .single();
 
     if (error) throw error;
+    
+    // Create notification for the other user
+    if (memory.user_id) {
+      const otherUserId = memory.user_id === 'user1' ? 'user2' : 'user1';
+      try {
+        await notificationService.create({
+          user_id: otherUserId,
+          type: 'memory',
+          title: 'New Memory Added',
+          message: `${memory.user_id === 'user1' ? 'Me' : 'Boyfriend'} added a new memory: "${memory.title}"`,
+          read: false,
+        });
+      } catch (err) {
+        console.error('Error creating notification:', err);
+      }
+    }
+    
     return data.id;
   },
 
@@ -155,6 +248,7 @@ export interface Milestone {
   title: string;
   description: string;
   image: string;
+  user_id?: string;
   created_at?: string;
 }
 
@@ -177,6 +271,23 @@ export const milestoneService = {
       .single();
 
     if (error) throw error;
+    
+    // Create notification for the other user
+    if (milestone.user_id) {
+      const otherUserId = milestone.user_id === 'user1' ? 'user2' : 'user1';
+      try {
+        await notificationService.create({
+          user_id: otherUserId,
+          type: 'milestone',
+          title: 'New Milestone Added',
+          message: `${milestone.user_id === 'user1' ? 'Me' : 'Boyfriend'} added a new milestone: "${milestone.title}"`,
+          read: false,
+        });
+      } catch (err) {
+        console.error('Error creating notification:', err);
+      }
+    }
+    
     return data.id;
   },
 
@@ -239,6 +350,7 @@ export interface Recipe {
   instructions: string[];
   memory: string;
   is_favorite: boolean;
+  user_id?: string;
   created_at?: string;
 }
 
@@ -268,11 +380,29 @@ export const recipeService = {
         instructions: JSON.stringify(recipe.instructions),
         memory: recipe.memory,
         is_favorite: recipe.is_favorite || false,
+        user_id: recipe.user_id,
       })
       .select()
       .single();
 
     if (error) throw error;
+    
+    // Create notification for the other user
+    if (recipe.user_id) {
+      const otherUserId = recipe.user_id === 'user1' ? 'user2' : 'user1';
+      try {
+        await notificationService.create({
+          user_id: otherUserId,
+          type: 'recipe',
+          title: 'New Recipe Added',
+          message: `${recipe.user_id === 'user1' ? 'Me' : 'Boyfriend'} added a new recipe: "${recipe.title}"`,
+          read: false,
+        });
+      } catch (err) {
+        console.error('Error creating notification:', err);
+      }
+    }
+    
     return data.id;
   },
 
@@ -480,6 +610,7 @@ export interface Location {
   y: number;
   image: string;
   memory: string;
+  user_id?: string;
   created_at?: string;
 }
 
@@ -503,11 +634,29 @@ export const locationService = {
       .insert({
         ...location,
         visited: location.visited || false,
+        user_id: location.user_id,
       })
       .select()
       .single();
 
     if (error) throw error;
+    
+    // Create notification for the other user
+    if (location.user_id) {
+      const otherUserId = location.user_id === 'user1' ? 'user2' : 'user1';
+      try {
+        await notificationService.create({
+          user_id: otherUserId,
+          type: 'location',
+          title: 'New Location Added',
+          message: `${location.user_id === 'user1' ? 'Me' : 'Boyfriend'} added a new location: "${location.name}"`,
+          read: false,
+        });
+      } catch (err) {
+        console.error('Error creating notification:', err);
+      }
+    }
+    
     return data.id;
   },
 
@@ -986,4 +1135,5 @@ export const imageService = {
     }
   },
 };
+
 

@@ -4,10 +4,12 @@ import { CookingPot, Heart, Plus, Edit, Trash2, X, Upload } from 'lucide-react';
 import { BackButton } from './BackButton';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { recipeService, Recipe, imageService } from '../lib/database-supabase';
+import { useAuth } from '../contexts/AuthContext';
 
 const categories = ['Breakfast', 'Lunch', 'Dinner', 'Dessert', 'Snack', 'Drink'];
 
 export function RecipeBook({ onBack }: { onBack: () => void }) {
+  const { currentUser } = useAuth();
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [flippedCards, setFlippedCards] = useState<Set<string>>(new Set());
   const [isAdding, setIsAdding] = useState(false);
@@ -75,6 +77,7 @@ export function RecipeBook({ onBack }: { onBack: () => void }) {
         ingredients: formData.ingredients.filter(i => i.trim() !== ''),
         instructions: formData.instructions.filter(i => i.trim() !== ''),
         image: imageUrl,
+        user_id: currentUser || undefined,
       });
 
       setIsAdding(false);

@@ -227,36 +227,28 @@ export function AppreciationGenerator({ onBack }: { onBack: () => void }) {
       {/* Main Heart Button */}
       <div className="relative mb-12">
         <motion.button
-          className="relative w-64 h-64 flex items-center justify-center"
+          className="relative flex items-center justify-center"
           onClick={generateCompliment}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
         >
           <motion.div
+            className="inline-block"
             animate={{
               scale: [1, 1.1, 1],
+              filter: [
+                'drop-shadow(0 0 40px rgba(255, 200, 226, 0.6)) drop-shadow(0 0 80px rgba(199, 175, 255, 0.8))',
+                'drop-shadow(0 0 60px rgba(255, 200, 226, 0.8)) drop-shadow(0 0 100px rgba(199, 175, 255, 1))',
+                'drop-shadow(0 0 40px rgba(255, 200, 226, 0.6)) drop-shadow(0 0 80px rgba(199, 175, 255, 0.8))',
+              ],
             }}
             transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: 'easeInOut',
+              scale: { duration: 2, repeat: Infinity, ease: 'easeInOut' },
+              filter: { duration: 2, repeat: Infinity, ease: 'easeInOut' },
             }}
           >
             <Heart className="w-64 h-64 fill-[#FFC8E2] text-[#FFC8E2]" />
           </motion.div>
-
-          {/* Pulsing Glow */}
-          <motion.div
-            className="absolute inset-0 rounded-full"
-            animate={{
-              boxShadow: [
-                '0 0 40px rgba(255, 200, 226, 0.5)',
-                '0 0 80px rgba(255, 200, 226, 0.8)',
-                '0 0 40px rgba(255, 200, 226, 0.5)',
-              ],
-            }}
-            transition={{ duration: 2, repeat: Infinity }}
-          />
 
           {/* Orbiting Sparkles */}
           {[...Array(6)].map((_, i) => (

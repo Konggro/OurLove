@@ -1,9 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { HomePage } from './components/HomePage';
+import { HomePageMobile } from './components/HomePageMobile';
 import { OurStoryTimeline } from './components/OurStoryTimeline';
+import { OurStoryTimelineMobile } from './components/OurStoryTimelineMobile';
 import { ReasonsILoveYou } from './components/ReasonsILoveYou';
+import { ReasonsILoveYouMobile } from './components/ReasonsILoveYouMobile';
 import { VirtualLoveLetters } from './components/VirtualLoveLetters';
+import { VirtualLoveLettersMobile } from './components/VirtualLoveLettersMobile';
 import { AdventureMap } from './components/AdventureMap';
 import { CustomPlaylist } from './components/CustomPlaylist';
 import { AppreciationGenerator } from './components/AppreciationGenerator';
@@ -17,24 +21,61 @@ import { MuseumOfUs } from './components/MuseumOfUs';
 import { LanguageLearning } from './components/LanguageLearning';
 import { FloatingElements } from './components/FloatingElements';
 import { MusicToggle } from './components/MusicToggle';
+import { Login } from './components/Login';
+import { NotificationBell } from './components/NotificationBell';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 
 export type PageType = 'home' | 'story' | 'reasons' | 'letters' | 'map' | 'playlist' | 
   'appreciation' | 'jokes' | 'roulette' | 'care' | 'countdown' | 'recipes' | 
   'messages' | 'museum' | 'languages';
 
-export default function App() {
+function AppContent() {
+  const { currentUser } = useAuth();
   const [currentPage, setCurrentPage] = useState<PageType>('home');
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 1024;
+      console.log('Screen width:', window.innerWidth, 'isMobile:', mobile);
+      setIsMobile(mobile);
+    };
+
+    handleResize(); // Call once on mount
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  if (!currentUser) {
+    return <Login />;
+  }
 
   const renderPage = () => {
     switch (currentPage) {
       case 'home':
-        return <HomePage onNavigate={setCurrentPage} />;
+        return isMobile ? (
+          <HomePageMobile onNavigate={setCurrentPage} />
+        ) : (
+          <HomePage onNavigate={setCurrentPage} />
+        );
       case 'story':
-        return <OurStoryTimeline onBack={() => setCurrentPage('home')} />;
+        return isMobile ? (
+          <OurStoryTimelineMobile onBack={() => setCurrentPage('home')} />
+        ) : (
+          <OurStoryTimeline onBack={() => setCurrentPage('home')} />
+        );
       case 'reasons':
-        return <ReasonsILoveYou onBack={() => setCurrentPage('home')} />;
+        return isMobile ? (
+          <ReasonsILoveYouMobile onBack={() => setCurrentPage('home')} />
+        ) : (
+          <ReasonsILoveYou onBack={() => setCurrentPage('home')} />
+        );
       case 'letters':
-        return <VirtualLoveLetters onBack={() => setCurrentPage('home')} />;
+        return isMobile ? (
+          <VirtualLoveLettersMobile onBack={() => setCurrentPage('home')} />
+        ) : (
+          <VirtualLoveLetters onBack={() => setCurrentPage('home')} />
+        );
       case 'map':
         return <AdventureMap onBack={() => setCurrentPage('home')} />;
       case 'playlist':
@@ -66,6 +107,7 @@ export default function App() {
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#1E1B3E] via-[#2D2654] to-[#1E1B3E]">
       <FloatingElements />
       <MusicToggle />
+      <NotificationBell />
       
       <AnimatePresence mode="wait">
         <motion.div
@@ -80,5 +122,13 @@ export default function App() {
         </motion.div>
       </AnimatePresence>
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }

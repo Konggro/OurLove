@@ -60,23 +60,33 @@ VITE_SUPABASE_ANON_KEY=your-actual-supabase-anon-key
    - Click "Import"
 
 3. **Configure Project:**
-   - **Framework Preset:** Vite (should auto-detect)
-   - **Root Directory:** `./` (leave as default)
-   - **Build Command:** `npm run build` (should be auto-filled)
-   - **Output Directory:** `dist` (should be auto-filled)
-   - **Install Command:** `npm install` (should be auto-filled)
+   - Vercel should auto-detect Vite and configure everything automatically
+   - If you see configuration options, they should be:
+     - **Framework Preset:** Vite
+     - **Root Directory:** `./`
+     - **Build Command:** `npm run build`
+     - **Output Directory:** `dist`
+   - If you don't see these options, that's fine - Vercel auto-detected them correctly
 
-4. **Add Environment Variables:**
-   - Click "Environment Variables"
-   - Add the following:
-     - **Name:** `VITE_SUPABASE_URL`
-     - **Value:** Your Supabase project URL
-     - **Name:** `VITE_SUPABASE_ANON_KEY`
-     - **Value:** Your Supabase anon key
-   - Click "Save"
+4. **Add Environment Variables (IMPORTANT):**
+   - **Before clicking Deploy**, look for "Environment Variables" section
+   - If you don't see it on the import screen, you can add them after deployment:
+     - Go to your project dashboard after deployment
+     - Click "Settings" → "Environment Variables"
+     - Add:
+       - **Name:** `VITE_SUPABASE_URL`
+       - **Value:** Your Supabase project URL
+       - **Environment:** Select "Production", "Preview", and "Development" (or just "Production" for now)
+       - Click "Save"
+     - Add second variable:
+       - **Name:** `VITE_SUPABASE_ANON_KEY`
+       - **Value:** Your Supabase anon key
+       - **Environment:** Select "Production", "Preview", and "Development" (or just "Production" for now)
+       - Click "Save"
+   - After adding environment variables, you'll need to redeploy (Vercel will prompt you)
 
 5. **Deploy:**
-   - Click "Deploy"
+   - Click "Deploy" (or if you already deployed, add environment variables and redeploy)
    - Wait for the build to complete (usually 1-2 minutes)
 
 6. **Your site is live!** 🎉
@@ -108,16 +118,73 @@ VITE_SUPABASE_ANON_KEY=your-actual-supabase-anon-key
    vercel --prod
    ```
 
-## Step 4: Update Environment Variables (If Needed)
+## Step 4: Pre-Production Environments
+
+Vercel automatically creates multiple environments for your project:
+
+### Environment Types
+
+1. **Production Environment:**
+   - Deployed from your `main` or `master` branch
+   - URL: `https://your-project.vercel.app`
+   - This is your live site
+
+2. **Preview Environments:**
+   - Automatically created for:
+     - Pull requests
+     - Other branches (not main/master)
+   - URL: `https://your-project-git-branch-name.vercel.app`
+   - Perfect for testing changes before merging to production
+
+3. **Development Environment:**
+   - For local development
+   - Run `vercel dev` locally
+
+### Setting Up Environment Variables for Each Environment
+
+1. Go to your Vercel project dashboard
+2. Click "Settings" → "Environment Variables"
+3. When adding/editing variables, select which environments they apply to:
+   - **Production:** For your live site
+   - **Preview:** For pull requests and branch deployments
+   - **Development:** For local development
+
+**Recommended Setup:**
+- Add your Supabase credentials to **all three environments** (Production, Preview, Development)
+- This allows you to test changes in preview environments before they go to production
+- You can use the same Supabase project or create separate ones for testing
+
+### Creating a Pre-Production Branch
+
+To test changes in a pre-production environment:
+
+1. Create a new branch:
+   ```bash
+   git checkout -b feature/new-feature
+   ```
+
+2. Make your changes and commit:
+   ```bash
+   git add .
+   git commit -m "Add new feature"
+   git push origin feature/new-feature
+   ```
+
+3. Vercel automatically creates a preview deployment
+4. Test the preview URL before merging to main
+5. When ready, merge to main to deploy to production
+
+## Step 5: Update Environment Variables (If Needed)
 
 If you need to update environment variables after deployment:
 
 1. Go to your Vercel project dashboard
 2. Click "Settings" → "Environment Variables"
 3. Update the values
-4. Redeploy (or wait for automatic redeploy on next push)
+4. Select which environments to apply to (Production, Preview, Development)
+5. Redeploy (or wait for automatic redeploy on next push)
 
-## Step 5: Custom Domain (Optional)
+## Step 6: Custom Domain (Optional)
 
 1. Go to your Vercel project dashboard
 2. Click "Settings" → "Domains"

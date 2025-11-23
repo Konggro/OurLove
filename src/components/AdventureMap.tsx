@@ -4,8 +4,10 @@ import { MapPin, Heart, Plus, Edit, Trash2, X, Upload, Check } from 'lucide-reac
 import { BackButton } from './BackButton';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { locationService, Location, imageService } from '../lib/database-supabase';
+import { useAuth } from '../contexts/AuthContext';
 
 export function AdventureMap({ onBack }: { onBack: () => void }) {
+  const { currentUser } = useAuth();
   const [locations, setLocations] = useState<Location[]>([]);
   const [hoveredLocation, setHoveredLocation] = useState<Location | null>(null);
   const [showVisited, setShowVisited] = useState(true);
@@ -85,6 +87,7 @@ export function AdventureMap({ onBack }: { onBack: () => void }) {
       await locationService.create({
         ...formData,
         image: imageUrl,
+        user_id: currentUser || undefined,
       });
 
       setIsAdding(false);

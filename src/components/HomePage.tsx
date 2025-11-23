@@ -2,9 +2,10 @@ import { motion } from 'motion/react';
 import { 
   BookHeart, Heart, Mail, MapPin, Music, Sparkles, 
   Laugh, Dices, Package, Clock, CookingPot, 
-  Calendar, Image, Languages, Home
+  Calendar, Image, Languages, Home, LogOut
 } from 'lucide-react';
 import { PageType } from '../App';
+import { useAuth } from '../contexts/AuthContext';
 
 interface HomePageProps {
   onNavigate: (page: PageType) => void;
@@ -28,8 +29,21 @@ const sections = [
 ];
 
 export function HomePage({ onNavigate }: HomePageProps) {
+  const { logout, userName } = useAuth();
+  
   return (
     <div className="min-h-screen flex items-center justify-center p-8">
+      {/* Logout Button */}
+      <motion.button
+        onClick={logout}
+        className="fixed top-4 left-4 z-50 p-3 bg-white/10 backdrop-blur-lg rounded-full border border-white/20 shadow-lg hover:bg-white/20 transition-all flex items-center gap-2 text-white"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        title="Logout"
+      >
+        <LogOut className="w-5 h-5" />
+        <span className="text-sm hidden sm:inline">{userName}</span>
+      </motion.button>
       <div className="relative w-full max-w-4xl aspect-square">
         {/* Central Heart Constellation */}
         <motion.div
@@ -38,20 +52,9 @@ export function HomePage({ onNavigate }: HomePageProps) {
           animate={{ scale: 1, rotate: 0 }}
           transition={{ duration: 1, ease: 'easeOut' }}
         >
-          <motion.div
-            className="relative"
-            animate={{
-              boxShadow: [
-                '0 0 40px rgba(255, 200, 226, 0.5)',
-                '0 0 80px rgba(199, 175, 255, 0.7)',
-                '0 0 40px rgba(255, 200, 226, 0.5)',
-              ],
-            }}
-            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <Heart className="w-32 h-32 fill-[#FFC8E2] text-[#FFC8E2] drop-shadow-2xl" />
+          <div className="relative inline-flex items-center justify-center">
             <motion.div
-              className="absolute inset-0 flex items-center justify-center"
+              className="absolute inset-0 flex items-center justify-center pointer-events-none"
               animate={{ rotate: 360 }}
               transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
             >
@@ -76,7 +79,20 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 />
               ))}
             </motion.div>
-          </motion.div>
+            <motion.div
+              className="inline-block"
+              animate={{
+                filter: [
+                  'drop-shadow(0 0 40px rgba(255, 200, 226, 0.5)) drop-shadow(0 0 80px rgba(199, 175, 255, 0.7))',
+                  'drop-shadow(0 0 60px rgba(255, 200, 226, 0.7)) drop-shadow(0 0 100px rgba(199, 175, 255, 0.9))',
+                  'drop-shadow(0 0 40px rgba(255, 200, 226, 0.5)) drop-shadow(0 0 80px rgba(199, 175, 255, 0.7))',
+                ],
+              }}
+              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <Heart className="w-32 h-32 fill-[#FFC8E2] text-[#FFC8E2]" />
+            </motion.div>
+          </div>
         </motion.div>
 
         {/* Title */}
